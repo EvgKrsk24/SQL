@@ -1,0 +1,66 @@
+	Задачи День 2:
+
+1	Посчитайте общую сумму продаж в США в 1 квартале 2012 года?  
+select count (*)
+from sales inner join sales_items
+on sales.SalesId=sales_items.SalesId
+where sales.SalesDate > date('2011-12-31') and sales.SalesDate < date('2012-04-01') and sales.shipcountry='USA'
+
+
+2	Покажите имена клиентов, которых нет среди работников.
+	
+select firstname from customers
+except
+select firstname from employees
+
+!!! FK JOINSSSSS
+
+3	Теоретический вопрос
+	Вернет ли данный запрос  одинаковый результат?  Да или НЕТ. 
+	Если  ДА. Объяснить почему.
+	Если НЕТ. Объяснить почему. Какой  запрос вернет больше строк ?
+
+ 	select *
+ 	from T1 LEFT JOIN T2
+		ON T1.column1=T2.column1
+	 where   T1.column1=0
+ 	
+	 select *
+	 from T1 LEFT JOIN T2
+		ON T1.column1=T2.column1 and   T1.column1=0
+-нет при 1ом проверка на 0 затронет 2тб, при 2ом 1тб
+
+4	Посчитайте количество треков в каждом альбоме. В результате должно быть:  имя альбома и кол-во треков.ы
+	
+select a.Title, count(*)
+from albums as a inner join tracks as t
+on a.AlbumId=t.AlbumId
+group by  a.Title
+
+5	Покажите фамилию и имя покупателей немцев сделавших заказы в 2009 году, товары которых были отгружены в город Берлин?
+select c.firstname, c.lastname
+from customers as c inner join sales as s
+on c.customerid=s.customerid
+where strftime('%Y',s.salesdate)='2009' and s.shipCity='Berlin'
+order by c.firstname
+
+6	Покажите фамилии  клиентов которые  купили больше 30 музыкальных треков ?
+	
+select c.lastname, s.salesid, count(s.salesid) 
+from customers as c inner join sales as s
+on c.customerid=s.customerid
+group by c.lastname
+having count(s.salesid)>8 - долно быть 30, но в выборке не наберется
+
+7	В базе есть таблица музыкальных треков и жанров Назовите среднюю стоимстость музыкального трека в каждом жанре?
+select g.name, avg(t.unitPrice)
+from genres as g inner join tracks as t
+on g.Genreid=t.Genreid
+group by g.name
+
+8	В базе есть таблица музыкальных треков и жанров. Покажите жанры у которых средняя стоимость одного трека больше 1-го рубля
+select g.name, avg(t.unitPrice)
+from genres as g inner join tracks as t
+on g.Genreid=t.Genreid
+group by g.name
+having avg(t.unitPrice) > 1

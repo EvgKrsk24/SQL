@@ -1,0 +1,92 @@
+Задачи День 1:
+
+1	Покажите  фамилию и имя клиентов из города Прага ?
+select FirstName, lastname
+from customers
+where City = 'Prague'
+
+2	Покажите  фамилию и имя клиентов у которых имя начинается букву M ? Содержит символ "ch"?
+select FirstName, lastname
+from customers
+where lastname like 'M%' 
+
+select FirstName, lastname
+from customers
+where lastname like '%ch%' 
+
+
+3	Покажите название и размер музыкальных треков в Мегабайтах ?
+select name, bytes
+from tracks
+
+4	Покажите  фамилию и имя сотрудников кампании нанятых в 2002 году из города Калгари ?
+select firstname, lastname, HireDate, city
+from employees
+where city = 'Calgary' and ( HireDate > date('2001-12-31') and HireDate < date('2003-01-01') )
+
+
+5	Покажите  фамилию и имя сотрудников кампании нанятых в возрасте 40 лет и выше?
+select firstname, lastname, HireDate, city
+from employees
+where (strftime('%Y', HireDate)-strftime('%Y', BirthDate)) >= 40  
+
+6	Покажите покупателей-амерканцев без факса ?
+select *
+from customers
+where country='USA' and fax is null
+
+
+7	Покажите канадские города в которые сделаны продажи в августе и сентябре месяце? 
+select ShipCity, SalesDate
+from sales
+where strftime('%m', SalesDate) in ('08','09')
+
+8	Покажите  почтовые адреса клиентов из домена gmail.com ?
+select Country||' '||City||' '||Address, email
+from customers
+where Email like ('%@gmail.com')
+
+9	Покажите сотрудников  которые работают в кампании уже 18 лет и более ?
+select *
+from employees
+where (strftime('%Y','2022-01-18')-strftime('%Y',HireDate)) > 18
+
+10	Покажите  в алфавитном порядке все должности в кампании  ?
+select distinct title
+from employees
+order by title asc
+
+11	Покажите  в алфавитном порядке Фамилию, Имя и год рождения покупателей  ?
+	Примечание: Вам поможет документация ниже
+	https://www.sqlitetutorial.net/sqlite-date-functions/sqlite-date-function/
+select FirstName, LastName
+from customers
+order by FirstName asc, LastName asc
+
+12	Сколько секунд длится самая короткая песня ?
+select min(Milliseconds)
+from tracks
+
+
+13	Покажите название и длительность в секундах самой короткой песни
+select name, min(Milliseconds)/1000
+from tracks
+group by name
+order by min(Milliseconds) limit 1
+
+14	Покажите средний возраст клиента для каждой страны ?
+select avg(age), country
+from customers
+group by (country)
+
+
+15	Покажите Фамилии работников нанятых в октябре?
+select FirstName
+from employees
+where strftime('%m',HireDate)='10'
+
+16	Покажите фамилию самого старого сотрудника
+select max(HireDate)
+from employees
+order by Hiredate asc limit 1
+
